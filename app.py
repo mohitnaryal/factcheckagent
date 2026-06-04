@@ -28,7 +28,7 @@ def extract_pdf_text(uploaded_file):
     text = ""
     for page in doc:
         text += page.get_text()
-    return text[:12000]
+    return text[:5000]
 
 
 def ask_llm(prompt):
@@ -38,7 +38,7 @@ def ask_llm(prompt):
 
 def extract_claims(text):
     prompt = f"""
-Extract 8-15 factual claims from this PDF text.
+Extract only 3-5 factual claims from this PDF text.
 Focus on numbers, dates, statistics, financial data, technical claims, rankings, company facts.
 
 Return ONLY valid JSON array:
