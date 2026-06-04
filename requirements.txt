@@ -1,5 +1,5 @@
 streamlit
 pymupdf
-google-genai
+google-generativeai
 tavily-python
 pandas
