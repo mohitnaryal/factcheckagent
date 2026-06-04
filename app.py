@@ -1,7 +1,7 @@
 import streamlit as st
 import fitz
 import pandas as pd
-from google import genai
+import google.generativeai as genai
 from tavily import TavilyClient
 import json
 
@@ -13,7 +13,8 @@ st.write("Upload a PDF. The app extracts factual claims and verifies them using 
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
 
-client = genai.Client(api_key=GEMINI_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel("gemini-1.5-flash")
 tavily = TavilyClient(api_key=TAVILY_API_KEY)
 
 
@@ -31,10 +32,7 @@ def extract_pdf_text(uploaded_file):
 
 
 def ask_llm(prompt):
-    response = client.models.generate_content(
-        model="gemini-1.5-flash",
-        contents=prompt
-    )
+    response = model.generate_content(prompt)
     return response.text
 
 
@@ -73,7 +71,7 @@ def verify_claim(claim, search_query):
         urls.append(r.get("url"))
 
     prompt = f"""
-You are a strict fact checker.
+You are a strict fact-checking assistant.
 
 Claim:
 {claim}
@@ -86,14 +84,14 @@ Verified
 Inaccurate
 False / Not enough evidence
 
-If the claim is inaccurate or false, provide the correct fact if available.
+If inaccurate or false, provide the correct fact if available.
 
 Return ONLY valid JSON:
 {{
   "status": "...",
   "corrected_fact": "...",
   "explanation": "...",
-  "confidence": 0-100
+  "confidence": 0
 }}
 """
     output = ask_llm(prompt)
