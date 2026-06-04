@@ -14,7 +14,7 @@ GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
 
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash")
 tavily = TavilyClient(api_key=TAVILY_API_KEY)
 
 
